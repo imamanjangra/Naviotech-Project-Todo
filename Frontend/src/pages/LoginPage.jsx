@@ -1,117 +1,97 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import API from "../services/Api";
 
 const LoginPage = () => {
-    const [email , setEmail] = useState('');
-    const [password , setPassword] = useState('');
-    const [isLoding , setIsLoding] = useState(false);
-    const [error , setError] = useState("");
-    const {setUser , user} = useContext(AuthContext)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { setUser, user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
+  useEffect(() => {
+    if (user) navigate("/todos");
+  }, [user, navigate]);
 
-    useEffect(() => {
-        if(user){
-        navigate('/todos');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await API.post("/users/login", { email, password });
+
+      const userData = {
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+      };
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+
+      navigate("/todos");
+    } catch {
+      setError("Invalid email or password");
     }
-    } , [user])
-
-
-    const handleLogin = async (e) => {
-        e.preventDefault();
-
-        try {
-            const {data} = await API.post("/users/login" , {
-                email,
-                password
-            });
-
-            const userData = {
-                _id : data._id,
-                name: data.name,
-                email: data.email,
-            }
-
-            localStorage.setItem('token' , data.token)
-            localStorage.setItem('user' , JSON.stringify(userData))
-            setUser(userData)
-            
-            navigate('/todos');
-        } catch (error) {
-            setError("invalid email or password ")
-        }
-    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        {/* Header */}
-        <h1 className="text-2xl font-bold text-center text-gray-800">
-          Login
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 dark:from-gray-900 dark:to-gray-800 px-4">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-xl p-8">
+        <h1 className="text-3xl font-medium tracking-tight text-gray-900 dark:text-white text-center">
+          Welcome Back
         </h1>
-        <p className="text-center text-gray-500 mt-1">
-          Welcome back! Please sign in
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+         Login to manage your todos
         </p>
 
-        {/* Form */}
-        <form onSubmit={handleLogin} className="mt-6 space-y-4">
-          {/* Email */}
+        {error && (
+          <div className="mt-4 text-sm text-red-600 bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin} className="mt-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email address
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Enter your email"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="you@example.com"
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Password
             </label>
             <input
               type="password"
               value={password}
-              required
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+              className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="••••••••"
             />
           </div>
 
-          {/* Remember + Forgot */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="rounded" />
-              Remember me
-            </label>
-            <a href="#" className="text-blue-600 hover:underline">
-              Forgot password?
-            </a>
-          </div>
-
-          {/* Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full rounded-lg bg-blue-600 py-2.5  text-white hover:bg-blue-700 transition"
           >
-            Login
+            Sign in
           </button>
         </form>
 
-        {/* Footer */}
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           Don’t have an account?{" "}
-          <a href="/signup" className="text-blue-600 font-medium hover:underline">
-            Sign up
+          <a href="/signup" className="text-blue-600 hover:underline">
+            Create one
           </a>
         </p>
       </div>

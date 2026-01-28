@@ -16,7 +16,7 @@ export const AuthProvider = ( {children} ) => {
             localStorage.removeItem("user");
         }
     } , [])
-
+    // console.log(user);
 const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

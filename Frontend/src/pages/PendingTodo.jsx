@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TodoItem from "../components/TodoItem";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import API from "../services/Api";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
-const TodoPage = () => {
+const PendingTodo = () => {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [filerData , setFilerData] = useState([])
+
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const fetchTodo = async () => {
     try {
@@ -79,12 +85,19 @@ const TodoPage = () => {
     }
   };
 
-  
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  useEffect(() => {
+    setFilerData(todos.filter((todo) => todo.status === "pending"))
+  } , [todos])
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
-      
-      <Sidebar  />
+     
+      <Sidebar onLogout={handleLogout} />
 
     
       <div className="flex-1 flex flex-col">
@@ -104,14 +117,14 @@ const TodoPage = () => {
             </button>
           </form>
 
-      
+         
           <div className="space-y-3">
             {loading ? (
               <p className="text-sm text-gray-500">Loading todos...</p>
             ) : todos.length === 0 ? (
               <p className="text-sm text-gray-500">No todos yet</p>
             ) : (
-              todos.map((todo) => (
+              filerData.map((todo) => (
                 <TodoItem
                   key={todo._id}
                   todo={todo}
@@ -128,4 +141,4 @@ const TodoPage = () => {
   );
 };
 
-export default TodoPage;
+export default PendingTodo;

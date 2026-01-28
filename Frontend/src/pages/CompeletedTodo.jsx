@@ -1,14 +1,22 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TodoItem from "../components/TodoItem";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import API from "../services/Api";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
-const TodoPage = () => {
+const CompeletedTodo = () => {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [filerData , setFilerData] = useState([])
 
+
+
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+    console.log(todos);
   const fetchTodo = async () => {
     try {
       setLoading(true);
@@ -25,6 +33,8 @@ const TodoPage = () => {
     fetchTodo();
   }, []);
 
+
+ 
   const addTodo = async (e) => {
     e.preventDefault();
     if (!text) return;
@@ -79,19 +89,28 @@ const TodoPage = () => {
     }
   };
 
-  
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+   useEffect(() => {
+    setFilerData(todos.filter((todo) => todo.status === "completed"))
+  } , [todos])
+//   console.log('filert data completed ' , filerData );
+//   console.log(todos.status?.[0]);
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
-      
-      <Sidebar  />
-
     
+      <Sidebar onLogout={handleLogout} />
+
+   
       <div className="flex-1 flex flex-col">
         <Navbar />
 
         <div className="p-6">
-        
+         
           <form onSubmit={addTodo} className="flex gap-2 mb-6">
             <input
               value={text}
@@ -104,14 +123,14 @@ const TodoPage = () => {
             </button>
           </form>
 
-      
+         
           <div className="space-y-3">
             {loading ? (
               <p className="text-sm text-gray-500">Loading todos...</p>
             ) : todos.length === 0 ? (
               <p className="text-sm text-gray-500">No todos yet</p>
             ) : (
-              todos.map((todo) => (
+              filerData.map((todo) => (
                 <TodoItem
                   key={todo._id}
                   todo={todo}
@@ -128,4 +147,4 @@ const TodoPage = () => {
   );
 };
 
-export default TodoPage;
+export default CompeletedTodo;
