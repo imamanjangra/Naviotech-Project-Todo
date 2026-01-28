@@ -21,7 +21,7 @@ export const createTodo = async (req , res) => {
 
 export const getTodo = async(req , res) => {
     try {
-        const todo = await todo.find({user: req.user._id})
+        const todo = await Todo.find({user: req.user._id})
         res.json(todo)
     } catch (error) {
         return res.status(400).json({ message: 'Failed to fetch todo !!!' });
