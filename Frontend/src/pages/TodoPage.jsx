@@ -1,48 +1,93 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TodoItem from "../components/TodoItem";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-
+import API from "../services/Api.jsx";
 const TodoPage = () => {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState("");
   const {user , logout} = useContext(AuthContext)
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
   // Add todo
-  const addTodo = (e) => {
+  console.log(user);
+  const fetchTodo = async () => {
+    try {
+      setLoading(true)
+      const {data} = await API.get('/todos')
+      console.log(data);
+      setTodos(data)
+    } catch (error) {
+      console.log("Failed to fetch todo");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchTodo();
+  } , [])
+
+
+  const addTodo = async (e) => {
     e.preventDefault();
     if (!text) return;
 
-    setTodos([
-      ...todos,
-      { id: Date.now(), title: text, completed: false },
-    ]);
-    setText("");
+    try {
+      const {data} = await API.post('/todos' , {
+        todoTitle : text,
+        status : "pending",
+      });
+
+      setTodos([data , ...todos]);
+      setText("");
+    } catch (error) {
+      console.log("Failed to add todo ");
+    }
+  };
+
+  
+  // Delete todo
+  const deleteTodo = async (id) => {
+   try {
+    await API.delete(`/todos/${id}`);
+    setTodos(todos.filter((todo) => todo._id !== id));
+   } catch (error) {
+    console.log("Failed to delete Todo");
+   }
   };
 
   // Toggle complete
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  const toggleTodo = async (todo) => {
+    
+    try {
+      const newStatus = todo.status === "completed" ? "pending" : "completed";
+
+      const {data} = await API.put(`/todos/${todo._id}` , {
+        status : newStatus,
+      })
+
+      setTodos(todos.map((status) => (status._id === todo._id ? data : status)))
+    } catch (error) {
+      console.log("Failed to toggle todo");
+    }
+    
   };
 
-  // Delete todo
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
 
   // Edit todo
-  const editTodo = (id, newTitle) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, title: newTitle } : todo
-      )
-    );
-  };
+  const editTodo =async (id, newText) => {
+    try {
+      const {data} =await API.put(`/todos/${id}` , {
+        todoTitle : newText,
+      })
 
+      setTodos(todos.map((edit) => (edit._id === id ? data : edit)));
+    } catch (error) {
+      console.log("Failed to edit todo ");
+    }
+  };
+console.log( 'todos' ,todos);
   // Logout
   const handleLogout  = () => {
     logout();
@@ -77,15 +122,21 @@ const TodoPage = () => {
 
       {/* Todo List */}
       <div className="space-y-3">
-        {todos.map((todo) => (
+       {loading ? (
+        <p> loading todo </p>
+       ) : todos.length === 0 ? (
+        <p> no todo yet </p>
+       ) : (
+        todos.map((todo) => (
           <TodoItem
-            key={todo.id}
-            todo={todo}
-            onToggle={toggleTodo}
-            onDelete={deleteTodo}
-            onEdit={editTodo}
+          key={todo._id}
+          todo={todo}
+          onDelete={deleteTodo}
+          onToggle={toggleTodo}
+          onEdit={editTodo}
           />
-        ))}
+        ))
+       )}
       </div>
     </div>
   );

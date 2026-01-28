@@ -2,10 +2,10 @@ import { useState } from "react";
 
 const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(todo.title);
+  const [newTitle, setNewTitle] = useState(todo.todoTitle);
 
   const saveEdit = () => {
-    onEdit(todo.id, newTitle);
+    onEdit(todo._id, newTitle);
     setIsEditing(false);
   };
 
@@ -14,8 +14,8 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
       <div className="flex items-center gap-3">
         <input
           type="checkbox"
-          checked={todo.completed}
-          onChange={() => onToggle(todo.id)}
+          checked={todo.status === "completed"}
+          onChange={() => onToggle(todo)}
         />
 
         {isEditing ? (
@@ -27,10 +27,10 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
         ) : (
           <span
             className={`${
-              todo.completed ? "line-through text-gray-400" : ""
+              todo.status === 'completed' ? "line-through text-gray-400" : ""
             }`}
           >
-            {todo.title}
+            {todo.todoTitle}
           </span>
         )}
       </div>
@@ -53,7 +53,7 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
         )}
 
         <button
-          onClick={() => onDelete(todo.id)}
+          onClick={() => onDelete(todo._id)}
           className="text-red-600 font-medium"
         >
           Delete
