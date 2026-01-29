@@ -5,14 +5,13 @@ import { useNavigate } from "react-router-dom";
 import API from "../services/Api";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import toast from "react-hot-toast";
 
 const CompeletedTodo = () => {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [filerData , setFilerData] = useState([])
-
-
 
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -24,6 +23,7 @@ const CompeletedTodo = () => {
       setTodos(data);
     } catch {
       console.log("Failed to fetch todos");
+      toast.error("Failed to Fetch Todo")
     } finally {
       setLoading(false);
     }
@@ -46,8 +46,10 @@ const CompeletedTodo = () => {
       });
       setTodos([data, ...todos]);
       setText("");
+       toast.success("Add Todo successful");
     } catch {
-      console.log("Failed to add todo");
+      console.log("Failed to add Todo");
+      toast.error("Failed to add Todo")
     }
   };
 
@@ -55,8 +57,10 @@ const CompeletedTodo = () => {
     try {
       await API.delete(`/todos/${id}`);
       setTodos(todos.filter((todo) => todo._id !== id));
+      toast.success("Delete Todo successful");
     } catch {
       console.log("Failed to delete todo");
+      toast.error("Failed to Delete Todo")
     }
   };
 
@@ -72,8 +76,10 @@ const CompeletedTodo = () => {
       setTodos(
         todos.map((t) => (t._id === todo._id ? data : t))
       );
+
     } catch {
       console.log("Failed to toggle todo");
+      toast.error("Failed to Toggle Todo")
     }
   };
 
@@ -84,8 +90,10 @@ const CompeletedTodo = () => {
       });
 
       setTodos(todos.map((t) => (t._id === id ? data : t)));
+       toast.success("Edit Todo successful");
     } catch {
       console.log("Failed to edit todo");
+      toast.error("Failed to Edit Todo")
     }
   };
 

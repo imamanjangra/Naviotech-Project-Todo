@@ -39,6 +39,7 @@ const SignupPage = () => {
       navigate("/todos");
     } catch {
       setError("Failed to create account");
+      toast.error("Failed to create account")
     }
   };
 

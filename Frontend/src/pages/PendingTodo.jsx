@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import API from "../services/Api";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import toast from "react-hot-toast";
 
 const PendingTodo = () => {
   const [todos, setTodos] = useState([]);
@@ -22,6 +23,7 @@ const PendingTodo = () => {
       setTodos(data);
     } catch {
       console.log("Failed to fetch todos");
+      toast.error("Failed to Fetch Todo")
     } finally {
       setLoading(false);
     }
@@ -42,8 +44,10 @@ const PendingTodo = () => {
       });
       setTodos([data, ...todos]);
       setText("");
+       toast.success("Add Todo successful");
     } catch {
       console.log("Failed to add todo");
+      toast.error("Failed to add Todo")
     }
   };
 
@@ -51,8 +55,10 @@ const PendingTodo = () => {
     try {
       await API.delete(`/todos/${id}`);
       setTodos(todos.filter((todo) => todo._id !== id));
+      toast.success("Delete Todo successful");
     } catch {
       console.log("Failed to delete todo");
+      toast.error("Failed to Delete Todo")
     }
   };
 
@@ -70,6 +76,7 @@ const PendingTodo = () => {
       );
     } catch {
       console.log("Failed to toggle todo");
+      toast.error("Failed to Toggle Todo")
     }
   };
 
@@ -80,8 +87,10 @@ const PendingTodo = () => {
       });
 
       setTodos(todos.map((t) => (t._id === id ? data : t)));
+       toast.success("Edit Todo successful");
     } catch {
       console.log("Failed to edit todo");
+      toast.error("Failed to Edit Todo")
     }
   };
 

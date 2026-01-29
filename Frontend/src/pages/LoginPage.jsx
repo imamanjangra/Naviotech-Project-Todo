@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import API from "../services/Api";
-
+import toast from "react-hot-toast";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,10 +28,12 @@ const LoginPage = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
-
+      toast.success("Login successful");
       navigate("/todos");
+      
     } catch {
       setError("Invalid email or password");
+      toast.error("Invalid email or password")
     }
   };
 

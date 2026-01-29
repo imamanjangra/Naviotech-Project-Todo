@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-export const AuthContext = createContext();
+import toast from "react-hot-toast";
 
+export const AuthContext = createContext();
 export const AuthProvider = ( {children} ) => {
     const [user , setUser] = useState(null);
 
@@ -14,6 +15,7 @@ export const AuthProvider = ( {children} ) => {
         } catch (error) {
             console.log("Invalid user data in localStroge");
             localStorage.removeItem("user");
+            toast.error("Invalid user data")
         }
     } , [])
     // console.log(user);
@@ -21,6 +23,7 @@ const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null)
+      toast.success("Logout successful");
 }
 
 return(
