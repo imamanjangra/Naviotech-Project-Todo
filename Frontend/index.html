@@ -13,6 +13,13 @@
     />
 
     <title>Todo App</title>
+
+     <script>
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
   </head>
   <body class="font-sans">
     <div id="root"></div>

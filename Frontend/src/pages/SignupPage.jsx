@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/Api";
 import { AuthContext } from "../contexts/AuthContext";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+
 
 const SignupPage = () => {
   const [name, setName] = useState("");
@@ -9,7 +12,6 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -19,7 +21,6 @@ const SignupPage = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-
    
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -33,9 +34,19 @@ const SignupPage = () => {
         password: password.trim(),
       });
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
+
+      console.log(data);
+
+     const userData = {
+  _id: data._id,
+  name: data.name,
+  email: data.email,
+};
+
+localStorage.setItem("token", data.token);
+localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+      toast.success("Account created successfully");
       navigate("/todos");
     } catch {
       setError("Failed to create account");
@@ -142,9 +153,9 @@ const SignupPage = () => {
 
         <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           Already have an account?{" "}
-          <a href="/" className="text-indigo-600 hover:underline">
-            Sign in
-          </a>
+          <Link to="/login" className="text-indigo-600 hover:underline">
+            Login
+          </Link>
         </p>
       </div>
     </div>

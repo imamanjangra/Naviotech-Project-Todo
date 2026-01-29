@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate  , Link} from "react-router-dom";
 import API from "../services/Api";
 import toast from "react-hot-toast";
 const LoginPage = () => {
@@ -92,9 +92,8 @@ const LoginPage = () => {
 
         <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           Don’t have an account?{" "}
-          <a href="/signup" className="text-blue-600 hover:underline">
-            Create one
-          </a>
+         <Link to="/signup" className="text-indigo-600 hover:underline">Signup</Link>
+
         </p>
       </div>
     </div>

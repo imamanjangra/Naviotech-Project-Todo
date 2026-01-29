@@ -2,6 +2,7 @@ import { ListTodo, CheckCircle, Clock, LogOut } from "lucide-react";
 import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -14,8 +15,11 @@ const Sidebar = () => {
 
   const [isOpen, setIsOpen] = useState(false);   
   const [isHover, setIsHover] = useState(false); 
-  if (!user) return null; 
-
+  
+  if(!user){
+    toast.error("Failed to create account")
+    return null;
+  }
   const showPopup = isOpen || isHover;
 
   return (
