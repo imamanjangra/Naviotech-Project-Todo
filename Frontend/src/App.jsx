@@ -3,7 +3,7 @@ import './App.css'
 import LoginPage from "./pages/LoginPage"
 import TodoPage from "./pages/TodoPage"
 import SignupPage from "./pages/SignupPage"
-import CompeletedTodo from "./pages/compeletedTodo"
+import CompeletedTodo from "./pages/CompeletedTodo"
 import PendingTodo from "./pages/PendingTodo"
 import { useContext } from "react"
 import { AuthContext } from "./contexts/AuthContext"

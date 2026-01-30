@@ -23,7 +23,7 @@ const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null)
-      toast.success("Logout successful");
+      toast.success("Logout successfully");
 }
 
 return(

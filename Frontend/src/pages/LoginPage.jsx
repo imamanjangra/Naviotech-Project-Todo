@@ -28,7 +28,7 @@ const LoginPage = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
-      toast.success("Login successful");
+      toast.success("Login successfully");
       navigate("/todos");
       
     } catch {
