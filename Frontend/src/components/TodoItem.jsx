@@ -12,16 +12,15 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
   };
 
   return (
-    <div
-      className="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-md transition"
-    >
-     
-      <div className="flex items-center gap-3 flex-1">
+    <div className="flex flex-wrap items-start justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-md transition">
+      
+      
+      <div className="flex items-start gap-3 flex-1 min-w-0">
         <input
           type="checkbox"
           checked={todo.status === "completed"}
           onChange={() => onToggle(todo)}
-          className="w-5 h-5 accent-blue-600"
+          className="w-5 h-5 accent-blue-600 mt-1"
         />
 
         {isEditing ? (
@@ -32,7 +31,7 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
           />
         ) : (
           <span
-            className={`flex-1 text-gray-900 dark:text-gray-100 ${
+            className={`flex-1 wrap-break-word text-gray-900 dark:text-gray-100 ${
               todo.status === "completed"
                 ? "line-through text-gray-400 dark:text-gray-400"
                 : ""
@@ -44,7 +43,7 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
       </div>
 
       
-      <div className="flex gap-2 ml-4">
+      <div className="flex gap-2 mt-3 sm:mt-0 sm:ml-4 shrink-0">
         {isEditing ? (
           <button
             onClick={saveEdit}

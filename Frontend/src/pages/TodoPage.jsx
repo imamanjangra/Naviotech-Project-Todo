@@ -4,6 +4,8 @@ import API from "../services/Api";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import toast from "react-hot-toast";
+import { TodoItemSkeleton } from "../components/TodoItemSkeleton ";
+import { EmptyTodo } from "../components/EmptyTodo";
 
 const TodoPage = () => {
   const [todos, setTodos] = useState([]);
@@ -38,7 +40,7 @@ const TodoPage = () => {
       });
       setTodos([data, ...todos]);
       setText("");
-       toast.success("Add Todo successful");
+       toast.success("Add Todo successfully");
     } catch {
       console.log("Failed to add todo");
       toast.error("Failed to add Todo")
@@ -49,7 +51,7 @@ const TodoPage = () => {
     try {
       await API.delete(`/todos/${id}`);
       setTodos(todos.filter((todo) => todo._id !== id));
-      toast.success("Delete Todo successful");
+      toast.success("Delete Todo successfully");
     } catch {
       console.log("Failed to delete todo");
       toast.error("Failed to Delete Todo")
@@ -81,7 +83,7 @@ const TodoPage = () => {
       });
 
       setTodos(todos.map((t) => (t._id === id ? data : t)));
-      toast.success("Edit Todo successful");
+      toast.success("Edit Todo successfully");
     } catch {
       console.log("Failed to edit todo");
       toast.error("Failed to Edit Todo")
@@ -116,9 +118,9 @@ const TodoPage = () => {
       
           <div className="space-y-3">
             {loading ? (
-              <p className="text-sm text-gray-500">Loading todos...</p>
+              <div className="text-sm text-gray-500"><TodoItemSkeleton/></div>
             ) : todos.length === 0 ? (
-              <p className="text-sm text-gray-500">No todos yet</p>
+              <div className="text-sm text-gray-500"><EmptyTodo/></div>
             ) : (
               todos.map((todo) => (
                 <TodoItem
