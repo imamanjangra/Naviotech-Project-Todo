@@ -111,7 +111,7 @@ const CompeletedTodo = () => {
 //   console.log(todos.status?.[0]);
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
     
       <Sidebar onLogout={handleLogout} />
 
@@ -119,7 +119,7 @@ const CompeletedTodo = () => {
       <div className="flex-1 flex flex-col">
         <Navbar />
 
-        <div className="p-6">
+        <div className="p-6 flex-1 overflow-y-auto">
          
           <form onSubmit={addTodo} className="flex gap-2 mb-6">
             <input
