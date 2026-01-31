@@ -15,6 +15,18 @@ const SignupPage = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const passwordValidation = (password) => {
+    if(password.length < 8){
+      return "password must be more than 8 character !"
+    }
+
+    if(!/[!@#$%^&*]/.test(password)){
+      return "password must be include a special symbol"
+    }
+
+    return null
+  }
+
   useEffect(() => {
     if (user) navigate("/todos");
   }, [user, navigate]);
@@ -23,10 +35,24 @@ const SignupPage = () => {
     e.preventDefault();
    
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords does not match");
+      toast.error("Passwords does not match")
+      return;
+    }
+    if(name.length >= 30){
+      setError("Name is big write small name !")
+       toast.error("Name is to much big")
       return;
     }
 
+    const error = passwordValidation(password)
+
+    if(error){
+      setError(error)
+      toast.error(error)
+      return
+    }
+   
     try {
       const { data } = await API.post("/users/register", {
         name: name.trim(),
@@ -35,7 +61,7 @@ const SignupPage = () => {
       });
 
 
-      console.log(data);
+      // console.log(data);
 
      const userData = {
   _id: data._id,
